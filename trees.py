@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from sklearn import tree
 import matplotlib.pyplot as plt
 
-# Load the dataset
+
 iris = load_iris()
 X = iris.data
 y = iris.target
@@ -21,6 +21,7 @@ y_pred = clf.predict(X_test)
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy}")
+
 plt.figure(figsize=(12, 8))
 tree.plot_tree(clf, feature_names=feature_names, class_names=target_names, filled=True)
 plt.show()
