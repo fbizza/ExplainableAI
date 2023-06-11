@@ -15,7 +15,9 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-print(accuracy)
+formatted_accuracy = "{:.2f}".format(accuracy_score(y_test, y_pred))
+print("Accuracy: ", formatted_accuracy)
+
 importance = clf.feature_importances_
 plt.barh(range(len(importance)), importance, align='center')
 plt.yticks(range(len(importance)), features_names)
