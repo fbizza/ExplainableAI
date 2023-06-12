@@ -1,5 +1,4 @@
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_california_housing
 from lime import lime_tabular
@@ -26,7 +25,6 @@ explanation = explainer.explain_instance(sample, model.predict, num_features=len
 print('Predicted house value:', model.predict(sample.reshape(1, -1))[0])
 print('True house value:', y_test[sample_index])
 
-# Plot the explanation
 explanation.save_to_file('lime_results.html')
 explanation.as_pyplot_figure()
 plt.show()
