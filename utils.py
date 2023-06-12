@@ -10,14 +10,14 @@ def import_boston_dataset():
     return X, y, features_names
 
 def import_compas_dataset():
-    df = pd.read_csv('datasets/propublica_data_for_fairml.csv')
+    df = pd.read_csv('../datasets/propublica_data_for_fairml.csv')
     X = df.drop(columns=['Two_yr_Recidivism'])
     y = df['Two_yr_Recidivism']
     features_names = list(X.columns.values)
     return X, y, features_names
 
 def import_income_dataset():
-    df = pd.read_csv("datasets/income.csv")
+    df = pd.read_csv("../datasets/income.csv")
     df = df.drop(df.columns[[0, 2, 4, 10, 11, 12, 13]], axis=1) # Not useful features
     label_encoder = LabelEncoder()
     df['class'] = df['class'].map({'<=50K': 0, '>50K': 1}).astype(int)
