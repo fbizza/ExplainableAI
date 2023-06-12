@@ -1,6 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import utils
@@ -23,4 +24,15 @@ plt.yticks(range(len(importance)), features_names)
 plt.xlabel("Feature Importance")
 plt.ylabel("Features")
 plt.title("Random Forest Feature Importances")
+plt.show()
+
+perm_importance = permutation_importance(clf, X, y, n_repeats=5)
+
+sorted_idx = perm_importance.importances_mean.argsort()
+plt.barh(range(len(features_names)), perm_importance.importances_mean[sorted_idx], align='center',
+         color=['red', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue'])
+plt.yticks(range(len(features_names)), [features_names[i] for i in sorted_idx])
+plt.xlabel('Permutation Importance')
+plt.ylabel('Features')
+plt.title('Feature Permutation Importances')
 plt.show()
