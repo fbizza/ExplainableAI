@@ -1,6 +1,25 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.datasets import fetch_openml
+import numpy as np
+import pandas as pd
+
+def generate_synthetic_dataset(n_samples=1000, n_features=5, true_coefficients=None):
+    if true_coefficients is None:
+        true_coefficients = np.array([3.0, -2.5, 1.5, 0.0, 0.0])
+
+    X = np.random.randn(n_samples, n_features)
+
+    z = np.dot(X, true_coefficients)
+
+    # sigmoid to map into [0, 1]
+    probabilities = 1 / (1 + np.exp(-z))
+
+    y = np.random.binomial(1, probabilities)
+
+    features_names = [f'Feature_{i}' for i in range(n_features)]
+
+    return X, y, features_names
 
 def import_boston_dataset():
     boston = fetch_openml(name='boston')
