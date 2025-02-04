@@ -18,7 +18,7 @@ print("Distribution of y:")
 for label, count in zip(unique, counts):
     print(f"Class {label}: {count} samples")
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.50, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
 
 #clf = SVC()
 
@@ -28,17 +28,43 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 
 formatted_accuracy = "{:.2f}".format(accuracy_score(y_test, y_pred))
-print("Accuracy: ", formatted_accuracy)
+print("Classification accuracy: ", formatted_accuracy)
 
+
+# permutation
 perm_importance = permutation_importance(clf, X, y, n_repeats=5, random_state=42)
-
-sorted_idx = perm_importance.importances_mean.argsort()
-
-plt.barh(range(len(features_names)), perm_importance.importances_mean[sorted_idx], align='center',
-         color=['red' if i == sorted_idx[-1] else 'blue' for i in range(len(features_names))])
-plt.yticks(range(len(features_names)), [features_names[i] for i in sorted_idx])
+plt.barh(range(len(features_names)), perm_importance.importances_mean, align='center')
+plt.yticks(range(len(features_names)), features_names)
 plt.xlabel('Permutation Importance')
 plt.ylabel('Features')
-plt.title('Features Importance Permutation')
+plt.title('Features Importance - Permutation')
 plt.show()
 
+# trees
+importance = clf.feature_importances_
+plt.barh(range(len(importance)), importance, align='center')
+plt.yticks(range(len(importance)), features_names)
+plt.xlabel("Feature Importance")
+plt.ylabel("Features")
+plt.title("Decision Tree Feature Importances")
+plt.show()
+
+
+# lime
+from lime import lime_tabular
+
+explainer = lime_tabular.LimeTabularExplainer(X_train, feature_names=features_names, class_names=['Class 0', 'Class 1'],
+                                              mode='classification', discretize_continuous=False)
+
+sample_index = 15  # Index of the sample to explain
+sample = X_test[sample_index]
+
+explanation = explainer.explain_instance(sample, clf.predict_proba, num_features=len(features_names))
+
+print('Predicted class:', clf.predict(sample.reshape(1, -1))[0])
+print('True class:', y_test[sample_index])
+
+explanation.save_to_file('lime_results.html')
+explanation.as_pyplot_figure()
+print(explanation.as_list())
+plt.show()
